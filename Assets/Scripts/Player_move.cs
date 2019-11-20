@@ -18,27 +18,27 @@ public class Player_move : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        movex = Input.GetAxis("Horizontal");
+
+        animator.SetFloat("speed", Mathf.Abs(movex));
+
+        if (movex > 0 && faceright == false)
+        {
+            flip();
+        }
+        else if (movex < 0 && faceright == true)
+        {
+            flip();
+        }
         if (allowmove == true)
         {
-            movex = Input.GetAxis("Horizontal");
-
-            animator.SetFloat("speed", Mathf.Abs(movex));
-
-            if (movex > 0 && faceright == false)
-            {
-                flip();
-            }
-            else if (movex < 0 && faceright == true)
-            {
-                flip();
-            }
-
             if (Input.GetButtonDown("Jump"))
             {
                 jump();
             }
-            rBody.velocity = new Vector2(movex * speed, rBody.velocity.y);
         }
+
+        rBody.velocity = new Vector2(movex * speed, rBody.velocity.y);
 
         if (rBody.velocity.y > 0)
         {
