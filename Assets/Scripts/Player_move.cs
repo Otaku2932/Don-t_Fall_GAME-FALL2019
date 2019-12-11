@@ -7,7 +7,7 @@ public class Player_move : MonoBehaviour
     private Rigidbody2D rBody;
     public float movex, speed = 0.5f, jumpspeed = 1;
     public bool faceright = true;
-    private bool allowmove = true;
+    private bool allowjump = true;
     public Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -30,7 +30,7 @@ public class Player_move : MonoBehaviour
         {
             flip();
         }
-        if (allowmove == true)
+        if (allowjump == true)
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -38,7 +38,15 @@ public class Player_move : MonoBehaviour
             }
         }
 
-        rBody.velocity = new Vector2(movex * speed, rBody.velocity.y);
+        if (allowjump == false) 
+        {
+            rBody.velocity = new Vector2(movex * speed / 2, rBody.velocity.y);
+        }
+        else
+        {
+            rBody.velocity = new Vector2(movex * speed, rBody.velocity.y);
+        }
+
 
         if (rBody.velocity.y > 0)
         {
@@ -60,11 +68,24 @@ public class Player_move : MonoBehaviour
     }
     void OnCollisionExit2D(Collision2D other)
     {
-        allowmove = false;
+        allowjump = false;
+        //Debug.Log("inair true");
+    }
+    void OnCollisionStay2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            allowjump = true;
+            //Debug.Log("inair false");
+        }
     }
     void OnCollisionEnter2D(Collision2D other)
     {
-        allowmove = true;
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            allowjump = true;
+            //Debug.Log("inair false");
+        }
     }
     void jump()
     {
